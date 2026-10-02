@@ -46,7 +46,7 @@ function Index() {
   useEffect(() => run(p), []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const set = <K extends keyof Params>(k: K, v: Params[K]) => setP((o) => ({ ...o, [k]: v }));
-  const m = sim?.methods;
+  const m = sim?.methods as [Sim["methods"][number], Sim["methods"][number], Sim["methods"][number]] | undefined;
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-8 md:px-8">
@@ -92,7 +92,7 @@ function Index() {
                 <tbody>
                   {m.map((r, i) => (
                     <tr key={r.name} className="border-b border-border/50">
-                      <td className="px-3 py-2" style={{ color: [C.orig, C.clip, C.filt][i] }}>{r.name}</td>
+                      <td className="px-3 py-2" style={{ color: [C.orig, C.clip, C.filt][i] ?? C.orig }}>{r.name}</td>
                       <td className="px-3 py-2">{f2(r.avg)} dB</td>
                       <td className="px-3 py-2">{f2(r.p999)} dB</td>
                       <td className="px-3 py-2">{f2(r.max)} dB</td>
