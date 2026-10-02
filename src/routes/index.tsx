@@ -146,7 +146,7 @@ function Index() {
                   <YAxis {...axisProps} />
                   <Tooltip {...tip} formatter={(v: number) => f2(v)} />
                   <Legend />
-                  <ReferenceLine y={sim.waveform[0]?.thr} stroke={C.thr} strokeDasharray="6 4" />
+                  <ReferenceLine y={sim.waveform[0]?.thr ?? 0} stroke={C.thr} strokeDasharray="6 4" />
                   <Line dataKey="orig" name="Original" stroke={C.orig} dot={false} strokeWidth={1.5} />
                   <Line dataKey="clip" name="Clipped" stroke={C.clip} dot={false} strokeWidth={1.5} />
                   <Line dataKey="filt" name="Clipped + Filtered" stroke={C.filt} dot={false} strokeWidth={1.5} />
