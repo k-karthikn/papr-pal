@@ -239,7 +239,7 @@ export function runSimulation(p: Params) {
   const ber = berCurve(p);
   const ccdfO = calculate_ccdf(o), ccdfC = calculate_ccdf(c), ccdfF = calculate_ccdf(f);
   const ccdf = ccdfO.map((pt, i) => ({ x: pt.x, orig: pt.p || null, clip: ccdfC[i].p || null, filt: ccdfF[i].p || null }));
-  const p999 = (a: number[]) => { const s = [...a].sort((x, y) => x - y); return s[Math.floor(0.999 * (s.length - 1))]; };
+  const p999 = (a: number[]): number => { const s = [...a].sort((x, y) => x - y); return s[Math.floor(0.999 * (s.length - 1))] ?? 0; };
   const at = (snr: number, key: "orig" | "clip" | "filt") => { const pt = ber.reduce((b, q) => (Math.abs(q.snr - snr) < Math.abs(b.snr - snr) ? q : b)); return pt[key]; };
   const snrRef = Math.min(p.snrMax, 20);
   const methods = [
