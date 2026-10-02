@@ -110,9 +110,9 @@ export function ofdm_modulate(sym: CArr, N: number, L: number): CArr {
 export function ofdm_demodulate(x: CArr, N: number, L: number): CArr {
   const M = N * L, X = { re: Float64Array.from(x.re), im: Float64Array.from(x.im) }, half = N / 2, out = carr(N);
   fft(X);
-  const g = 1 / Math.sqrt(M * M / N) / M * M; // undo modulator scaling (fft has no 1/M)
-  for (let k = 0; k < half; k++) { out.re[k] = X.re[k] * g / M; out.im[k] = X.im[k] * g / M; }
-  for (let k = half; k < N; k++) { out.re[k] = X.re[M - N + k] * g / M; out.im[k] = X.im[M - N + k] * g / M; }
+  const g = Math.sqrt(N) / M; // undo modulator scaling
+  for (let k = 0; k < half; k++) { out.re[k] = X.re[k] * g; out.im[k] = X.im[k] * g; }
+  for (let k = half; k < N; k++) { out.re[k] = X.re[M - N + k] * g; out.im[k] = X.im[M - N + k] * g; }
   return out;
 }
 
@@ -196,7 +196,7 @@ export function berCurve(p: Params) {
     let eo = 0, ec = 0, ef = 0, tot = 0;
     for (let i = 0; i < p.berSymbols; i++) {
       const r = oneSymbol(p);
-      const dem = (sig: CArr) => qam_demodulate(ofdm_demodulate(add_awgn_noise(sig, snr), p.subcarriers, p.oversampling), p.modulation);
+      const dem = (sig: CArr) => qam_demodulate(ofdm_demodulate(add_awgn_noise(sig, snr, p.oversampling), p.subcarriers, p.oversampling), p.modulation);
       const b = r.bits;
       const err = (d: Uint8Array) => { let e = 0; for (let j = 0; j < b.length; j++) if (b[j] !== d[j]) e++; return e; };
       eo += err(dem(r.x)); ec += err(dem(r.clipped)); ef += err(dem(r.filtered)); tot += b.length;
